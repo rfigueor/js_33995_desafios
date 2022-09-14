@@ -1,12 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cotizador de Mano de Obras</title>
-</head>
-<body>
-  <script src="./index.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- CSS only -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+      crossorigin="anonymous"
+    />
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="content">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Cotizador de Servicios</h3>
+
+          <div class="col-md-6">
+            <select class="form-select" id="listServicio" aria-label="Default select example"></select>
+            <div class="alert alert-danger" id="alertServicio" role="alert">Seleccione Opcion Valida!!</div>
+          </div>
+
+          <div class="col-md-6" id="divPintura">
+            <div class="col-md-6">
+              <select class="form-select" id="listPintura" aria-label="Default select example"></select>
+              <div class="alert alert-danger" id="alertPintura" role="alert">Seleccione Opcion Valida!!</div>
+            </div>
+            <div class="col-md-6" id="divCasa">
+              <div class="mb-3">
+                <label for="txtMtCasa" class="form-label">¿Cantidad de metros cuadrados?</label>
+                <input class="form-control" id="txtMtCasa" type="number" />
+              </div>
+            </div>
+            <div class="col-md-6" id="divEdificio">
+              <div class="mb-3">
+                <label for="txtPisos" class="form-label">¿Cantidad de pisos ?</label>
+                <input class="form-control" id="txtPisos" type="number" />
+              </div>
+              <div class="mb-3">
+                <label for="txtMtEdificio" class="form-label">¿Cantidad de metros cuadrados?</label>
+                <input class="form-control" id="txtMtEdificio" type="number" />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6" id="divRadier">
+            <div class="mb-3">
+              <label for="txtMtRadier" class="form-label">¿Cantidad de metros cuadrados?</label>
+              <input class="form-control" id="txtMtRadier" type="number" />
+            </div>
+            <div class="mb-3">
+              <label for="txtCmRadier" class="form-label">¿Altura en cm del radier? (cm)</label>
+              <input class="form-control" id="txtCmRadier" type="number" />
+            </div>
+          </div>
+
+          <button type="button" id="btnCalcular" class="btn btn-primary">Calcular</button>
+          <div class="alert alert-success" id="alertValor" role="alert"></div>
+
+          <script src="./index.js"></script>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

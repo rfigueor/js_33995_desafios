@@ -1,73 +1,141 @@
-function fnPintura(){
-    let mt2=0;
-    let totalMonto=0;
-    let precio = 2000;
-    
-    let tipoPinturaTrabajo = parseInt(prompt("¿Que desea pintar?\n1. Casa (Obs: 1 Solo piso) \n2.Edificio (Obs: Se agrega 5% extra al valor del mt2 por cada piso a contar desde 2do piso)"));    
+const servicios = [
+    { id: 1, nombre: "Trabajo de Pintura" },
+    { id: 2, nombre: "Construcción de Radier" },
+]
 
-    //Se ejecuta el ciclo hasta que selecciona una opcion valida
-    while (tipoPinturaTrabajo !== 1 &&  tipoPinturaTrabajo !== 2){
-        tipoTrabajo = parseInt(prompt("¿Que desea pintar?\n1. Casa (Obs: 1 Solo piso) \n2.Edificio (Obs: Se agrega 5% extra al valor del mt2 por cada piso a contar desde 2do piso)"));    
+const pintura = [
+    { id: 1, nombre: "Casa", nota: "(Obs: 1 Solo piso)" },
+    { id: 2, nombre: "Edificio", nota: "(Obs: Se agrega 5% extra al valor del mt2 por cada piso a contar desde 2do piso)" },
+]
+
+const mtXvalor = (mt, valor) => {
+    return mt * valor;
+}
+
+const extraXpiso = (porc, numPiso, precio) => {
+    return ((precio / 100) * (porc * numPiso)) + precio
+}
+
+let tipoServicio = 0;
+let tipoTrabajo = 0;
+
+function fnBuildMessage(item) {
+    let msg = "";
+    switch (item) {
+        case "servicios":
+
+            msg = `<option value="0" selected>Seleccione Servicio</option>`
+            let listServicio = document.getElementById("listServicio");
+            for (const item of servicios) {
+                msg = msg + `<option value="${item.id}">${item.nombre}</option>`
+            }
+            listServicio.innerHTML = msg;
+            break;
+
+        case "pintura":
+
+            msg = `<option value="0" selected>Seleccione Superficie a Pintar</option>`
+            let listPintura = document.getElementById("listPintura");
+            for (const item of pintura) {
+
+                msg = msg + `<option value="${item.id}">${item.nombre} ${item.nota}</option>`
+            }
+            listPintura.innerHTML = msg;
+            break;
+
+        default:
+            msg = "sin informacion";
+            break;
     }
+    return msg;
+}
 
 
-    if(tipoPinturaTrabajo===1){
-        mt2 = parseInt(prompt("¿Cantidad de metros cuadrados?"));    
-        totalMonto= precio * mt2;
-        alert("El valor total del trabajo de pintura de la casa es de : $"+ totalMonto.toString());
-    }else{
-        let porcAdic = 5;
-        let pisos = parseInt(prompt("¿Cantidad de pisos del edificio?"));
-        while (pisos === 1){
-            pisos = parseInt(prompt("La cantidad de pisos debe ser igual o mayor a 2:"));
+
+function fnCalcular() {
+    let mt2 = 0;              // Inicializa variable
+    let totalMonto = 0;       // Inicializa variable
+    let precio = 0;      // Valor de mano de obra por metro cuadrado
+    //SERVICIO DE PINTURA
+    if (this.tipoServicio === 1) {
+        precio = 2000;
+
+        let alertValor = document.getElementById("alertValor");
+        if (tipoTrabajo === 1) {
+            mt2 = Number(document.getElementById("txtMtCasa").value);
+            alertValor.innerHTML = "El valor total del trabajo de pintura de la casa es de : $" + mtXvalor(mt2, precio).toString();
+        } else if (tipoTrabajo === 2) {
+            let porcAdic = 5;
+            let pisos = Number(document.getElementById("txtPisos").value);
+            mt2 = Number(document.getElementById("txtMtEdificio").value);
+
+            //Se realiza calculo del piso 1
+            totalMonto = mtXvalor(mt2, precio);
+            for (let x = 1; x < pisos; x++) {
+                totalMonto = totalMonto + mtXvalor(mt2, extraXpiso(porcAdic, x, precio));
+            }
+            alertValor.innerHTML = "El valor total del trabajo de pintura del edificio es de $" + totalMonto.toString();
         }
-        mt2 = parseInt(prompt("¿Cantidad de metros cuadrados?"));    
+    } else if (this.tipoServicio === 2) {
+        //SERVICIO DE RADIER
+        let mtCubicosXsaco = 0.025;       // Se entienede que un 1 saco rinde para 1 mt cuadrado con una altura de 25 cm 
+        precio = 2500;              // Valor de mano de obra por metro cuadrado
 
-        //Se realiza calculo del piso 1
-        totalMonto= precio * mt2;
+        mt2 = Number(document.getElementById("txtMtRadier").value);
+        let cmAltura = Number(document.getElementById("txtCmRadier").value);
 
-        //Para efectos del calculo (multiplicacion), se inicia en 1 pero se llega a la cantidad "anterior" del total de piso [x < pisos]
-        for (let x = 1; x < pisos; x++) {
-            totalMonto = totalMonto + ((((precio / 100) * (porcAdic*x)) + precio) * mt2);
-        }
+        let cantSacos = Math.round((mt2 * (cmAltura / 1000)) / mtCubicosXsaco);
 
-        alert("El valor total del trabajo de pintura del edificio es de $"+ totalMonto.toString());
-    }
-}
-
-
-function fnRadier(){
-    let mt2 = parseInt(prompt("¿Cantidad de metros cuadrados?"));    
-    let cmAltura= parseInt(prompt("¿Cantidad de cm del altura?"));
-    
-    
-    while (cmAltura < 15){
-        cmAltura = parseInt(prompt("La altura minima necesaria es de 15 cm, favor ingrese nuevamente la altura:"));
+        alertValor.innerHTML = "El valor del trabajo es de $" + mtXvalor(mt2, precio).toString() + " y se requieren un total de " + cantSacos.toString() + " sacos de concreto.";
+    } else {
+        alertValor.innerHTML = "Servicio seleccionado no valido" ;
     }
 
-    let mtCubicosXsaco=0.025;       // Se entienede que un 1 saco rinde para 1 mt cuadrado con una altura de 25 cm 
-    let precio = 2500;              // Valor de mano de obra por metro cuadrado
-
-    let cantSacos = Math.round((mt2 * (cmAltura/1000))/mtCubicosXsaco);
-    let totalMonto= mt2 * precio;
-
-    alert("- Se requieren un total de "+ cantSacos.toString()+" sacos de concreto.\n- El valor del trabajo es de $"+ totalMonto.toString());
-    
+    alertValor.style.visibility = "visible";
 }
 
 
-let tipoTrabajo = parseInt(prompt("¿Seleccione el tipo de trabajo a realizar?\n1. Trabajo de Pintura\n2. Construcción de Radier"));
 
-//Se ejecuta el ciclo hasta que selecciona una opcion valida
-while (tipoTrabajo !== 1 &&  tipoTrabajo !== 2){
-    tipoTrabajo = parseInt(prompt("Debe seleccionar el tipo de trabajo:\n1. Trabajo de Pintura\n2. Construcción de Radier"));
+document.getElementById('listServicio').addEventListener('change', function () {
+
+    this.tipoServicio = Number(this.value);
+    document.getElementById("alertServicio").style.visibility =  (tipoServicio !== 1 && tipoServicio !== 2) ? "visible" : "hidden";
+    document.getElementById("divPintura").style.visibility = (tipoServicio === 1) ? "visible" : "hidden";
+    document.getElementById("divCasa").style.visibility = "hidden";
+    document.getElementById("divEdificio").style.visibility = "hidden";
+    document.getElementById("divRadier").style.visibility = (tipoServicio === 2) ? "visible" : "hidden";
+    document.getElementById("btnCalcular").style.visibility = (tipoServicio === 1 || tipoServicio === 2) ? "visible" : "hidden";
+    document.getElementById("alertValor").style.visibility = "hidden";
+});
+
+
+document.getElementById('listPintura').addEventListener('change', function () {
+
+    this.tipoTrabajo = Number(this.value);
+    document.getElementById("alertPintura").style.visibility = (tipoTrabajo !== 1 && tipoTrabajo !== 2) ? "visible" : "hidden";
+    document.getElementById("divCasa").style.visibility = (tipoTrabajo === 1) ? "visible" : "hidden";
+    document.getElementById("divEdificio").style.visibility = (tipoTrabajo === 2) ? "visible" : "hidden";
+    document.getElementById("btnCalcular").style.visibility = (tipoTrabajo === 1 || tipoTrabajo === 2) ? "visible" : "hidden";
+    document.getElementById("alertValor").style.visibility = "hidden";
+});
+
+function fnStar() {
+    document.getElementById("alertServicio").style.visibility = "hidden";
+    document.getElementById("alertPintura").style.visibility = "hidden";
+    document.getElementById("divPintura").style.visibility = "hidden";
+    document.getElementById("divRadier").style.visibility = "hidden";
+    document.getElementById("divCasa").style.visibility = "hidden";
+    document.getElementById("divEdificio").style.visibility = "hidden";
+
+
+    document.getElementById("btnCalcular").style.visibility = "hidden";
+    document.getElementById("alertValor").style.visibility = "hidden";
+
+    let btnCalcularPintura = document.getElementById("btnCalcular");
+    btnCalcularPintura.addEventListener("click", fnCalcular);
+
 }
 
-if(tipoTrabajo === 1)
-{
-    fnPintura();
-}
-else
-{
-    fnRadier();
-}
+fnStar()
+fnBuildMessage("servicios");
+fnBuildMessage("pintura");
