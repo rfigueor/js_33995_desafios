@@ -1,12 +1,33 @@
-const servicios = [
-    { id: 1, nombre: "Trabajo de Pintura" },
-    { id: 2, nombre: "Construcción de Radier" },
-]
+// Se agrego un repositorio con un archivo JSON con la información que se debe cargar
+// https://github.com/rfigueor/js_33995_db/blob/main/db.json
+// la cual se invoca desde el servicio gratuito de https://my-json-server.typicode.com/
 
-const pintura = [
-    { id: 1, nombre: "Casa", nota: "(Obs: 1 Solo piso)" },
-    { id: 2, nombre: "Edificio", nota: "(Obs: Se agrega 5% extra al valor del mt2 por cada piso a contar desde 2do piso)" },
-]
+
+const getServicios = async () => {
+    const respuesta = await fetch("https://my-json-server.typicode.com/rfigueor/js_33995_db/tree/main/servicios");
+    const data = await respuesta.json();
+
+    msg = `<option value="0" selected>Seleccione Servicio</option>`
+
+    for (const item of data) {
+        msg = msg + `<option value="${item.id}">${item.nombre}</option>`
+    }
+    document.getElementById("listServicio").innerHTML = msg;
+};
+
+const getPinturas = async () => {
+    const respuesta = await fetch("https://my-json-server.typicode.com/rfigueor/js_33995_db/tree/main/pinturas");
+    const data = await respuesta.json();
+
+    let lstPintura = JSON.parse(localStorage.getItem("ltPintura"));
+    msg = `<option value="0" selected>Seleccione Superficie a Pintar</option>`
+
+    for (const item of lstPintura) {
+
+        msg = msg + `<option value="${item.id}">${item.nombre} ${item.nota}</option>`
+    }
+    document.getElementById("listPintura").innerHTML = msg;
+};
 
 const mtXvalor = (mt, valor) => { return mt * valor; }
 
@@ -175,14 +196,9 @@ document.getElementById('listPintura').addEventListener('change', async function
 });
 
 function fnStar() {
-
-    localStorage.setItem("ltServicios", JSON.stringify(servicios));
-    localStorage.setItem("ltPintura", JSON.stringify(pintura));
-
+    getServicios();
+    getPinturas();
     document.getElementById("divPintura").style.visibility = "hidden";
-    
-    fnBuildMessage("servicios");
-    fnBuildMessage("pintura");
 }
 
 fnStar()
